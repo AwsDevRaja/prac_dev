@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+
+    environment {
+        // Define any environment variables here
+        APP_NAME = "my-app"
+        DEPLOY_DIR = "/opt/apps"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out code...'
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building the application...'
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running unit tests...'
+                sh 'mvn test'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying the application...'
+                // Simulated deploy (copying JAR file)
+                sh "cp target/${APP_NAME}.jar ${DEPLOY_DIR}/"
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline executed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+    }
+}
